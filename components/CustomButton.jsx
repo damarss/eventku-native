@@ -1,7 +1,9 @@
-import { Button } from "react-native";
+import { Alert, Button, Text, Touchable, TouchableNativeFeedback, TouchableOpacity, TouchableWithoutFeedback } from "react-native";
 
 const CustomButton = ({ children, ...props }) => (
-    <Button className="flex py-2 px-7" {...props}>{children}</Button>
+    <TouchableNativeFeedback onPress={props.onPress}>
+        <Text className="bg-teal-400 rounded-lg font-bold px-6 py-2 my-3 text-white">{props.title}</Text>
+    </TouchableNativeFeedback>
 );
 
 export default CustomButton;

@@ -5,6 +5,7 @@ import { Button, StyleSheet, Text, View } from "react-native";
 import HomeScreen from "./screens/HomeScreen";
 import LoginScreen from "./screens/LoginScreen";
 import { TailwindProvider } from "tailwindcss-react-native";
+import LoadingScreen from "./screens/LoadingScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -13,6 +14,11 @@ export default function App() {
     <TailwindProvider>
       <NavigationContainer>
         <Stack.Navigator>
+          <Stack.Screen
+            name="Loading"
+            component={LoadingScreen}
+            options={{ headerShown: false }}
+          />
           <Stack.Screen
             name="Login"
             component={LoginScreen}
@@ -35,5 +41,9 @@ export default function App() {
 }
 
 const ProfileScreen = ({ navigation, route }) => {
-  return <Text className="text-red-500">This is {route.params.name}'s profile icikiwir</Text>;
+  return (
+    <Text className="text-red-500">
+      This is {route.params.name}'s profile icikiwir
+    </Text>
+  );
 };
