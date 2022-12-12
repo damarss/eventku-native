@@ -2,6 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "@react-navigation/native";
 import { useCallback } from "react";
 import { ActivityIndicator, Image, StyleSheet, Text, View } from "react-native";
+import CustomButton from "../components/CustomButton";
 
 const LoadingScreen = ({ navigation }) => {
   useFocusEffect(
@@ -10,8 +11,8 @@ const LoadingScreen = ({ navigation }) => {
         const token = await AsyncStorage.getItem("token");
         if (token) {
           navigation.navigate("Home");
-        } else {
           console.log(token);
+        } else {
           console.log("token not found");
           setTimeout(() => {
             navigation.navigate("Login");
