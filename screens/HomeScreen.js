@@ -10,7 +10,8 @@ const HomeScreen = ({ navigation }) => {
   const [token, setToken] = useState("");
 
   const handleLogout = async () => {
-    await AsyncStorage.getItem("token");
+    await AsyncStorage.removeItem("token");
+    console.log("logout");
     navigation.navigate("Login");
   };
 
@@ -26,9 +27,7 @@ const HomeScreen = ({ navigation }) => {
           setToken(decodedToken);
         } else {
           console.log("token not found");
-          setTimeout(() => {
-            navigation.navigate("Login");
-          }, 700);
+          navigation.navigate("Login");
         }
       };
       checkToken();

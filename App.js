@@ -6,6 +6,7 @@ import HomeScreen from "./screens/HomeScreen";
 import LoginScreen from "./screens/LoginScreen";
 import { TailwindProvider } from "tailwindcss-react-native";
 import LoadingScreen from "./screens/LoadingScreen";
+import RegisterScreen from "./screens/RegisterScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -22,7 +23,12 @@ export default function App() {
           <Stack.Screen
             name="Login"
             component={LoginScreen}
-            options={{ title: "Login", headerBackVisible: false }}
+            options={{ title: "Login", headerShown: false }}
+          />
+          <Stack.Screen
+            name="Register"
+            component={RegisterScreen}
+            options={{ title: "Register", headerShown: false }}
           />
           <Stack.Screen
             name="Home"

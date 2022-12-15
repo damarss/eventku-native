@@ -11,12 +11,13 @@ const LoadingScreen = ({ navigation }) => {
         const token = await AsyncStorage.getItem("token");
         if (token) {
           navigation.navigate("Home");
-          console.log(token);
-        } else {
-          console.log("token not found");
           setTimeout(() => {
             navigation.navigate("Login");
-          }, 700);
+          }, 1000);
+        } else {
+          setTimeout(() => {
+            navigation.navigate("Login");
+          }, 1000);
         }
       };
       checkToken();

@@ -14,7 +14,7 @@ import {
 import axios, { axiosAuth } from "../api/axios";
 import CustomButton from "../components/CustomButton";
 
-const LoginScreen = ({ navigation }) => {
+const RegisterScreen = ({ navigation }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
@@ -68,15 +68,15 @@ const LoginScreen = ({ navigation }) => {
         />
       </View>
       <View className="w-10/12 relative top-7">
-        <CustomButton title="Login" onPress={handleLogin} />
+        <CustomButton title="Register" onPress={handleLogin} />
         <View className="flex flex-row justify-center mt-5">
-          <Text className="text-gray-500">Don't have an account?</Text>
+          <Text className="text-gray-500">Already have an account?</Text>
           <TouchableWithoutFeedback
             onPress={() => {
-              navigation.navigate("Register");
+              navigation.navigate("Login");
             }}
           >
-            <Text className="text-blue-500 ml-2">Register</Text>
+            <Text className="text-blue-500 ml-2">Login</Text>
           </TouchableWithoutFeedback>
         </View>
       </View>
@@ -86,4 +86,4 @@ const LoginScreen = ({ navigation }) => {
   );
 };
 
-export default LoginScreen;
+export default RegisterScreen;
