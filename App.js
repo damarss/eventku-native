@@ -1,4 +1,4 @@
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, useFocusEffect } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { StatusBar } from "expo-status-bar";
 import { Button, StyleSheet, Text, View } from "react-native";
@@ -7,10 +7,16 @@ import LoginScreen from "./screens/LoginScreen";
 import { TailwindProvider } from "tailwindcss-react-native";
 import LoadingScreen from "./screens/LoadingScreen";
 import RegisterScreen from "./screens/RegisterScreen";
+import { useCallback, useEffect } from "react";
+import ProfileScreen from "./screens/ProfileScreen";
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
+  useEffect(() => {
+    console.log("Halo");
+  }, []);
+
   return (
     <TailwindProvider>
       <NavigationContainer>
@@ -33,23 +39,20 @@ export default function App() {
           <Stack.Screen
             name="Home"
             component={HomeScreen}
-            options={{ title: "Welcome" }}
+            options={{
+              title: "Home",
+              headerBackVisible: false,
+              headerShadowVisible: false,
+            }}
           />
           <Stack.Screen
             name="Profile"
             component={ProfileScreen}
-            options={{ title: "Profile ", headerBackVisible: false }}
+            options={{ title: "Profile ", headerShown: false }}
           />
         </Stack.Navigator>
+        <StatusBar style="auto" />
       </NavigationContainer>
     </TailwindProvider>
   );
 }
-
-const ProfileScreen = ({ navigation, route }) => {
-  return (
-    <Text className="text-red-500">
-      This is {route.params.name}'s profile icikiwir
-    </Text>
-  );
-};
