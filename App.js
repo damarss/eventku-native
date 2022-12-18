@@ -9,8 +9,11 @@ import LoadingScreen from "./screens/LoadingScreen";
 import RegisterScreen from "./screens/RegisterScreen";
 import { useCallback, useEffect } from "react";
 import ProfileScreen from "./screens/ProfileScreen";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import HomeTab from "./screens/HomeTab";
 
 const Stack = createNativeStackNavigator();
+const Tab = createBottomTabNavigator();
 
 export default function App() {
   useEffect(() => {
@@ -38,17 +41,11 @@ export default function App() {
           />
           <Stack.Screen
             name="Home"
-            component={HomeScreen}
+            component={HomeTab}
             options={{
               title: "Home",
-              headerBackVisible: false,
-              headerShadowVisible: false,
+              headerShown: false,
             }}
-          />
-          <Stack.Screen
-            name="Profile"
-            component={ProfileScreen}
-            options={{ title: "Profile ", headerShown: false }}
           />
         </Stack.Navigator>
         <StatusBar style="auto" />

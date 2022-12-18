@@ -14,7 +14,7 @@ import {
 import axios, { axiosAuth } from "../api/axios";
 import CustomButton from "../components/CustomButton";
 import { useFocusEffect } from "@react-navigation/core";
-
+import { ALERT_TYPE, Dialog } from "react-native-alert-notification";
 // import icon
 
 const LoginScreen = ({ navigation }) => {
@@ -30,9 +30,18 @@ const LoginScreen = ({ navigation }) => {
         password: password,
       })
       .then(async (res) => {
-        Alert.alert("Login Success");
         await AsyncStorage.setItem("token", res.data.token);
-        navigation.navigate("Home");
+        setUsername("");
+        setPassword("");
+        Dialog.show({
+          type: ALERT_TYPE.SUCCESS,
+          title: "Success",
+          textBody: "Congrats! this is dialog box success",
+          button: "close",
+        });
+        setTimeout(() => {
+          navigation.navigate("Loading");
+        }, 700);
       })
       .catch((err) => {
         Alert.alert("Login Failed");

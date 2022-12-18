@@ -17,22 +17,25 @@ import CustomButton from "../components/CustomButton";
 const RegisterScreen = ({ navigation }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
 
+  const usernameRef = React.useRef();
+  const emailRef = React.useRef();
   const passwordRef = React.useRef();
 
-  const handleLogin = async () => {
+  const handleRegister = async () => {
     axios
-      .post("login", {
+      .post("register", {
+        name: name,
+        email: email,
         username: username,
         password: password,
       })
-      .then(async (res) => {
-        Alert.alert("Login Success");
-        await AsyncStorage.setItem("token", res.data.token);
-        navigation.navigate("Home");
+      .then((res) => {
+        navigation.navigate("Login");
       })
       .catch((err) => {
-        Alert.alert("Login Failed");
         console.log(err);
       });
   };
@@ -46,29 +49,58 @@ const RegisterScreen = ({ navigation }) => {
         />
       </View>
       <View className="w-10/12">
-        {/* logo */}
-        <TextInput
-          className="border px-5 py-2 rounded-md w-full"
-          placeholder="Username"
-          onChangeText={setUsername}
-          autoCapitalize="none"
-          onSubmitEditing={() => {
-            passwordRef.current.focus();
-          }}
-          blurOnSubmit={false}
-          returnKeyType="next"
-        />
-        <TextInput
-          ref={passwordRef}
-          className="border px-5 py-2 rounded-md w-full mt-5"
-          placeholder="Password"
-          onChangeText={setPassword}
-          autoCapitalize="none"
-          secureTextEntry={true}
-        />
+        <View className="border-2 px-3 py-4 rounded-2xl w-full">
+          <TextInput
+            placeholder="Name"
+            onChangeText={setName}
+            autoCapitalize="none"
+            onSubmitEditing={() => {
+              emailRef.current.focus();
+            }}
+            returnKeyType="next"
+          />
+        </View>
+        <View className="border-2 px-3 py-4 rounded-2xl w-full mt-5">
+          <TextInput
+            ref={emailRef}
+            placeholder="Email"
+            onChangeText={setEmail}
+            autoCapitalize="none"
+            onSubmitEditing={() => {
+              usernameRef.current.focus();
+            }}
+            returnKeyType="next"
+          />
+        </View>
+        <View className="border-2 px-3 py-4 rounded-2xl w-full mt-5">
+          <TextInput
+            ref={usernameRef}
+            placeholder="Username"
+            onChangeText={setUsername}
+            autoCapitalize="none"
+            onSubmitEditing={() => {
+              passwordRef.current.focus();
+            }}
+            returnKeyType="next"
+          />
+        </View>
+        <View className="border-2 px-3 py-4 rounded-2xl w-full mt-5">
+          <TextInput
+            ref={passwordRef}
+            placeholder="Password"
+            onChangeText={setPassword}
+            autoCapitalize="none"
+            blurOnSubmit={true}
+            onSubmitEditing={() => {
+              buttonRef.current.props.onPress();
+            }}
+            secureTextEntry={true}
+            returnKeyType="done"
+          />
+        </View>
       </View>
       <View className="w-10/12 relative top-7">
-        <CustomButton title="Register" onPress={handleLogin} />
+        <CustomButton title="Register" onPress={handleRegister} />
         <View className="flex flex-row justify-center mt-5">
           <Text className="text-gray-500">Already have an account?</Text>
           <TouchableWithoutFeedback
