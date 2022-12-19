@@ -15,9 +15,10 @@ import axios, { axiosAuth } from "../api/axios";
 import CustomButton from "../components/CustomButton";
 import { useFocusEffect } from "@react-navigation/native";
 import { useCallback } from "react";
+import jwt_decode from "jwt-decode";
 import { ALERT_TYPE, Dialog } from "react-native-alert-notification";
 
-const RegisterScreen = ({ navigation }) => {
+const AddUserScreen = ({ navigation }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
@@ -28,6 +29,7 @@ const RegisterScreen = ({ navigation }) => {
   const passwordRef = React.useRef();
 
   const handleRegister = async () => {
+    console.log(name, email, username, password);
     axios
       .post("register", {
         name: name,
@@ -39,12 +41,12 @@ const RegisterScreen = ({ navigation }) => {
         Dialog.show({
           type: ALERT_TYPE.SUCCESS,
           title: "Success",
-          textBody: "Register success",
+          textBody: "User added successfully",
           button: "close",
           autoClose: true,
         });
         setTimeout(() => {
-          navigation.navigate("Login");
+          navigation.navigate("Admin");
         }, 1500);
       })
       .catch((err) => {
@@ -66,7 +68,12 @@ const RegisterScreen = ({ navigation }) => {
       const checkToken = async () => {
         const token = await AsyncStorage.getItem("token");
         if (token) {
-          navigation.navigate("Loading");
+          const decodedToken = jwt_decode(token);
+          if (decodedToken.role !== "admin") {
+            setTimeout(() => {
+              navigation.navigate("Events");
+            }, 1000);
+          }
         } else {
           setTimeout(() => {
             navigation.navigate("Login");
@@ -82,7 +89,7 @@ const RegisterScreen = ({ navigation }) => {
       <View className="items-center fixed -top-16">
         <Image
           className="w-32 h-32 mx-auto"
-          source={require("../assets/eventku.png")}
+          source={require("../assets/icons/people.png")}
         />
       </View>
       <View className="w-10/12">
@@ -134,17 +141,7 @@ const RegisterScreen = ({ navigation }) => {
         </View>
       </View>
       <View className="w-10/12 relative top-7">
-        <CustomButton title="Register" onPress={handleRegister} />
-        <View className="flex flex-row justify-center mt-5">
-          <Text className="text-gray-500">Already have an account?</Text>
-          <TouchableWithoutFeedback
-            onPress={() => {
-              navigation.navigate("Login");
-            }}
-          >
-            <Text className="text-blue-500 ml-2">Login</Text>
-          </TouchableWithoutFeedback>
-        </View>
+        <CustomButton title="Add User" onPress={handleRegister} />
       </View>
 
       <StatusBar style="auto" />
@@ -152,4 +149,4 @@ const RegisterScreen = ({ navigation }) => {
   );
 };
 
-export default RegisterScreen;
+export default AddUserScreen;

@@ -23,12 +23,14 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 const Tab = createBottomTabNavigator();
 
 const HomeTab = ({ navigation, route }) => {
+  const [decodedToken, setDecodedToken] = useState(null);
   useFocusEffect(
     useCallback(() => {
       const checkToken = async () => {
         const token = await AsyncStorage.getItem("token");
         if (token) {
           const decodedToken = jwt_decode(token);
+          setDecodedToken(decodedToken);
         } else {
           console.log("token not found");
           setTimeout(() => {
@@ -68,7 +70,9 @@ const HomeTab = ({ navigation, route }) => {
           tabBarLabel: "Home",
         }}
       />
-      <Tab.Screen name="Admin" component={AdminScreen} />
+      {decodedToken && decodedToken.role === "admin" && (
+        <Tab.Screen name="Admin" component={AdminScreen} />
+      )}
       <Tab.Screen name="Profile" component={ProfileScreen} />
     </Tab.Navigator>
   );

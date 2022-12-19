@@ -1,10 +1,11 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "@react-navigation/native";
 import { useCallback, useState } from "react";
-import { Image, Text, View } from "react-native";
+import { Image, Text, TouchableHighlight, View } from "react-native";
 import { axiosAuth } from "../api/axios";
 import CustomButton from "../components/CustomButton";
 import jwt_decode from "jwt-decode";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
 const ProfileScreen = ({ navigation, route }) => {
   const [profile, setProfile] = useState(null);
@@ -20,11 +21,9 @@ const ProfileScreen = ({ navigation, route }) => {
         const token = await AsyncStorage.getItem("token");
         if (token) {
           const decodedToken = jwt_decode(token);
-          console.log(decodedToken);
           axiosAuth(token)
             .get(`user/${decodedToken.uid}`)
             .then((res) => {
-              console.log(res.data);
               setProfile(res.data);
             });
         } else {
@@ -35,8 +34,6 @@ const ProfileScreen = ({ navigation, route }) => {
         }
       };
       checkToken();
-
-      // axiosAuth(token).get(`user/${token.uid}`);
     }, [])
   );
 
@@ -65,8 +62,42 @@ const ProfileScreen = ({ navigation, route }) => {
       </View>
 
       {/* profile menu */}
+      <View className="flex flex-col mt-12">
+        <TouchableHighlight
+          underlayColor="white"
+          onPress={() => {
+            navigation.navigate("Events");
+          }}
+        >
+          <View className="flex flex-row items-center gap-3 mx-12">
+            <View className="bg-blue-200 p-3 rounded-full">
+              <Ionicons name="calendar" color="#3B82F6" size={32} />
+            </View>
+            <View>
+              <Text className="text-base font-bold">My Events</Text>
+              <Text>See all your events</Text>
+            </View>
+          </View>
+        </TouchableHighlight>
+        <TouchableHighlight
+          underlayColor="white"
+          onPress={() => {
+            navigation.navigate("EditProfile");
+          }}
+        >
+          <View className="flex flex-row items-center gap-3 mx-12 mt-3">
+            <View className="bg-blue-200 p-3 rounded-full">
+              <Ionicons name="settings" color="#3B82F6" size={32} />
+            </View>
+            <View>
+              <Text className="text-base font-bold">Settings</Text>
+              <Text>Change your profile</Text>
+            </View>
+          </View>
+        </TouchableHighlight>
+      </View>
+
       <View className="flex mx-12 mt-12">
-        
         <CustomButton title="Logout" onPress={handleLogout} />
       </View>
     </View>
