@@ -14,8 +14,6 @@ import {
 } from "react-native";
 import { axiosAuth } from "../api/axios";
 import jwt_decode from "jwt-decode";
-import Card from "../components/Card";
-import CustomButton from "../components/CustomButton";
 import { FloatingAction } from "react-native-floating-action";
 import {
   AlertNotificationRoot,
@@ -49,11 +47,11 @@ const AdminScreen = ({ navigation }) => {
             }, 1500);
           }
 
-          const res = await axiosAuth(token).get("event");
-          setEvents(res.data.events);
+          const res = await axiosAuth(token).get("user");
+          setUsers(res.data.users);
 
-          const res2 = await axiosAuth(token).get("user");
-          setUsers(res2.data.users);
+          const res2 = await axiosAuth(token).get("event");
+          setEvents(res2.data.events);
         } else {
           console.log("token not found");
           setTimeout(() => {

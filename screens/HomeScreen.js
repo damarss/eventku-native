@@ -1,14 +1,25 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useFocusEffect } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { useCallback, useState } from "react";
-import { ActivityIndicator, FlatList, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  FlatList,
+  Text,
+  TouchableOpacity,
+  View,
+  TextInput,
+} from "react-native";
 import { axiosAuth } from "../api/axios";
 import Card from "../components/Card";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import { useRef } from "react";
 
 const HomeScreen = ({ navigation }) => {
   const [token, setToken] = useState("");
   const [events, setEvents] = useState([]);
+  const [eventsCopy, setEventsCopy] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const searchRef = useRef(null);
 
   useFocusEffect(
     useCallback(() => {
@@ -31,6 +42,7 @@ const HomeScreen = ({ navigation }) => {
                 return eventDate > now;
               });
               setEvents(filteredEvents);
+              setEventsCopy(filteredEvents);
               setIsLoading(false);
             })
             .catch(async (err) => {
@@ -44,8 +56,43 @@ const HomeScreen = ({ navigation }) => {
           }, [700]);
         }
       };
+      navigation.setOptions({
+        headerLargeTitle: true,
+        headerTitle: "Home",
+        headerRight: () => (
+          // create search bar
+          <View className="flex-1 flex-row items-center justify-center w-2/12 px-2 py-3 absolute right-0 mr-4 text-base focus:w-full">
+            <TouchableOpacity
+              onPress={() => {
+                searchRef.current.focus();
+              }}
+            >
+              <Ionicons name="search" size={20} color="blue" />
+            </TouchableOpacity>
+            <TextInput
+              ref={searchRef}
+              autoCapitalize="none"
+              returnKeyType="search"
+              onSubmitEditing={(e) => {
+                if (e.nativeEvent.text === "") {
+                  setEvents(eventsCopy);
+                  return;
+                }
+
+                const filteredEvents = events.filter((event) => {
+                  return event.title
+                    .toLowerCase()
+                    .includes(e.nativeEvent.text.toLowerCase());
+                });
+                setEvents(filteredEvents);
+              }}
+              className="ml-3"
+            />
+          </View>
+        ),
+      });
       checkToken();
-    }, [])
+    }, [navigation])
   );
 
   return (
@@ -61,9 +108,11 @@ const HomeScreen = ({ navigation }) => {
           />
         </View>
       ) : (
-        <View className="flex-1 justify-center items-center">
-          <Text className="text-lg">No events found</Text>
-        </View>
+        !isLoading && (
+          <View className="flex-1 justify-center items-center">
+            <Text className="text-lg">No events found</Text>
+          </View>
+        )
       )}
 
       {isLoading && (
