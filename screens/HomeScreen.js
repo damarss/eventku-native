@@ -60,7 +60,6 @@ const HomeScreen = ({ navigation }) => {
         headerLargeTitle: true,
         headerTitle: "Home",
         headerRight: () => (
-          // create search bar
           <View className="flex-1 flex-row items-center justify-center w-2/12 px-2 py-3 absolute right-0 mr-4 text-base focus:w-full">
             <TouchableOpacity
               onPress={() => {
@@ -128,7 +127,7 @@ const HomeScreen = ({ navigation }) => {
 
       {isLoading && (
         <View className="flex-1 justify-center items-center h-full">
-          <ActivityIndicator size="large" />
+          <ActivityIndicator size={54} color="#242565" />
         </View>
       )}
     </View>

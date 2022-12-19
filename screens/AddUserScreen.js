@@ -29,7 +29,17 @@ const AddUserScreen = ({ navigation }) => {
   const passwordRef = React.useRef();
 
   const handleRegister = async () => {
-    console.log(name, email, username, password);
+    if (!username || !password || !name || !email) {
+      Dialog.show({
+        type: ALERT_TYPE.DANGER,
+        title: "Error",
+        textBody: "All fields are required",
+        button: "close",
+        autoClose: true,
+      });
+      return;
+    }
+
     axios
       .post("register", {
         name: name,

@@ -25,8 +25,8 @@ const LoadingScreen = ({ navigation }) => {
   return (
     <View className="flex flex-1 items-center justify-center">
       {/* show loading image */}
-      <Image className="w-32 h-32" source={require("../assets/eventku.png")} />
-      <ActivityIndicator size="large" />
+      <Image className="w-32 h-32 mb-5" source={require("../assets/eventku.png")} />
+      <ActivityIndicator size={54} color="#242565" />
     </View>
   );
 };

@@ -3,6 +3,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import { useCallback, useState } from "react";
 import {
   ActivityIndicator,
+  Dimensions,
   FlatList,
   Image,
   Linking,
@@ -27,6 +28,7 @@ const AdminScreen = ({ navigation }) => {
   const [current, setCurrent] = useState("users");
   const [users, setUsers] = useState([]);
   const [events, setEvents] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useFocusEffect(
     useCallback(() => {
@@ -52,6 +54,8 @@ const AdminScreen = ({ navigation }) => {
 
           const res2 = await axiosAuth(token).get("event");
           setEvents(res2.data.events);
+
+          setIsLoading(false);
         } else {
           console.log("token not found");
           setTimeout(() => {
@@ -65,17 +69,31 @@ const AdminScreen = ({ navigation }) => {
 
   const actions = [
     {
-      text: "Manage Events",
-      icon: require("../assets/icons/event.png"),
-      name: "bt_events",
-      position: 2,
-      color: "#242565",
-    },
-    {
       text: "Manage User",
       icon: require("../assets/icons/people.png"),
       name: "bt_user",
       position: 1,
+      color: "#242565",
+    },
+    {
+      text: "Add User",
+      icon: require("../assets/icons/add-user.png"),
+      name: "bt_add_user",
+      position: 2,
+      color: "#242565",
+    },
+    {
+      text: "Manage Events",
+      icon: require("../assets/icons/event.png"),
+      name: "bt_events",
+      position: 3,
+      color: "#242565",
+    },
+    {
+      text: "Add Event",
+      icon: require("../assets/icons/add-event.png"),
+      name: "bt_add_event",
+      position: 4,
       color: "#242565",
     },
   ];
@@ -85,28 +103,34 @@ const AdminScreen = ({ navigation }) => {
       setCurrent("events");
     } else if (name === "bt_user") {
       setCurrent("users");
+    } else if (name === "bt_add_user") {
+      navigation.navigate("AddUser");
+    } else if (name === "bt_add_event") {
+      navigation.navigate("AddEvent");
     }
   };
 
   const UserList = ({ item }) => {
     return (
-      <View className="flex-1 bg-white">
-        <View className="flex justify-center">
-          <Text className="text-base">{item.name}</Text>
-          <TouchableWithoutFeedback
-            onPress={() => {
-              Linking.canOpenURL(`mailto:${item.email}`).then((supported) => {
-                if (supported) {
-                  Linking.openURL(`mailto:${item.email}`);
-                } else {
-                  console.log("Don't know how to open URI: " + item.email);
-                }
-              });
-            }}
-          >
-            <Text className="text-blue-500">{item.email}</Text>
-          </TouchableWithoutFeedback>
-        </View>
+      <View
+        className={`flex-1 justify-center bg-white w-[${
+          Dimensions.get("window").width
+        }] bg-red-200`}
+      >
+        <Text className="text-base">{item.name}</Text>
+        <TouchableWithoutFeedback
+          onPress={() => {
+            Linking.canOpenURL(`mailto:${item.email}`).then((supported) => {
+              if (supported) {
+                Linking.openURL(`mailto:${item.email}`);
+              } else {
+                console.log("Don't know how to open URI: " + item.email);
+              }
+            });
+          }}
+        >
+          <Text className="text-blue-500">{item.email}</Text>
+        </TouchableWithoutFeedback>
       </View>
     );
   };
@@ -131,19 +155,19 @@ const AdminScreen = ({ navigation }) => {
         <View className="flex-1 items-center justify-center bg-white">
           <View className="items-center">
             <Image
-              className="w-16 h-16 mx-auto"
+              className="w-12 h-12 mx-auto"
               source={
                 current === "users"
                   ? require("../assets/icons/people.png")
                   : require("../assets/icons/event.png")
               }
             />
-            <Text className="text-2xl font-bold text-gray-800">
+            <Text className="text-xl font-bold text-gray-800">
               List of {current.charAt(0).toUpperCase() + current.slice(1)}
             </Text>
           </View>
           <View className="flex-1 items-center justify-center bg-white">
-            <View className="flex-1 items-center justify-center bg-white">
+            {!isLoading ? (
               <FlatList
                 data={current === "users" ? users : events}
                 keyExtractor={(item) => item.id}
@@ -155,7 +179,9 @@ const AdminScreen = ({ navigation }) => {
                   }
                 }}
               />
-            </View>
+            ) : (
+              <ActivityIndicator size={54} color="#242565" />
+            )}
           </View>
         </View>
 

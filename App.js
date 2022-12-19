@@ -9,6 +9,7 @@ import HomeTab from "./screens/HomeTab";
 import EventDetailScreen from "./screens/EventDetailScreen";
 import EditProfileScreen from "./screens/EditProfileScreen";
 import AddUserScreen from "./screens/AddUserScreen";
+import AddEventScreen from "./screens/AddEventScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -53,6 +54,13 @@ export default function App() {
             component={AddUserScreen}
             options={{
               title: "Add User",
+            }}
+          />
+          <Stack.Screen
+            name="AddEvent"
+            component={AddEventScreen}
+            options={{
+              title: "Add Event",
             }}
           />
         </Stack.Navigator>
