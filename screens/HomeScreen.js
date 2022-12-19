@@ -80,9 +80,20 @@ const HomeScreen = ({ navigation }) => {
                 }
 
                 const filteredEvents = events.filter((event) => {
-                  return event.title
-                    .toLowerCase()
-                    .includes(e.nativeEvent.text.toLowerCase());
+                  return (
+                    event.title
+                      .toLowerCase()
+                      .includes(e.nativeEvent.text.toLowerCase()) ||
+                    event.venue
+                      .toLowerCase()
+                      .includes(e.nativeEvent.text.toLowerCase()) ||
+                    event.description
+                      .toLowerCase()
+                      .includes(e.nativeEvent.text.toLowerCase()) ||
+                    event.organizer
+                      .toLowerCase()
+                      .includes(e.nativeEvent.text.toLowerCase())
+                  );
                 });
                 setEvents(filteredEvents);
               }}
