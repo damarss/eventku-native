@@ -6,7 +6,9 @@ import {
   Dimensions,
   FlatList,
   Image,
+  ImageBackground,
   Linking,
+  RefreshControl,
   ScrollView,
   Text,
   Touchable,
@@ -22,6 +24,8 @@ import {
   Dialog,
   Toast,
 } from "react-native-alert-notification";
+import UserList from "../components/UserList";
+import EventList from "../components/EventList";
 
 const AdminScreen = ({ navigation }) => {
   const [token, setToken] = useState("");
@@ -29,6 +33,24 @@ const AdminScreen = ({ navigation }) => {
   const [users, setUsers] = useState([]);
   const [events, setEvents] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const wait = (timeout) => {
+    return new Promise((resolve) => setTimeout(resolve, timeout));
+  };
+
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+
+    wait(2000).then(() => setRefreshing(false));
+
+    const token = await AsyncStorage.getItem("token");
+    const res = await axiosAuth(token).get("user");
+    setUsers(res.data.users);
+
+    const res2 = await axiosAuth(token).get("event");
+    setEvents(res2.data.events);
+  }, []);
 
   useFocusEffect(
     useCallback(() => {
@@ -110,74 +132,29 @@ const AdminScreen = ({ navigation }) => {
     }
   };
 
-  const UserList = ({ item }) => {
-    return (
-      <View
-        className={`flex-1 justify-center bg-white w-[${
-          Dimensions.get("window").width
-        }] bg-red-200`}
-      >
-        <Text className="text-base">{item.name}</Text>
-        <TouchableWithoutFeedback
-          onPress={() => {
-            Linking.canOpenURL(`mailto:${item.email}`).then((supported) => {
-              if (supported) {
-                Linking.openURL(`mailto:${item.email}`);
-              } else {
-                console.log("Don't know how to open URI: " + item.email);
-              }
-            });
-          }}
-        >
-          <Text className="text-blue-500">{item.email}</Text>
-        </TouchableWithoutFeedback>
-      </View>
-    );
-  };
-
-  const EventList = ({ item }) => {
-    return (
-      <View className="flex-1 bg-white">
-        <View className="flex justify-center">
-          <Text className="text-base">{item.title}</Text>
-          <TouchableWithoutFeedback>
-            <Text className="text-blue-500">{item.venue}</Text>
-          </TouchableWithoutFeedback>
-        </View>
-      </View>
-    );
-  };
-
   return (
     <AlertNotificationRoot>
       <View className="flex-1 items-center bg-white">
         {/* show list of user */}
-        <View className="flex-1 items-center justify-center bg-white">
-          <View className="items-center">
-            <Image
-              className="w-12 h-12 mx-auto"
-              source={
-                current === "users"
-                  ? require("../assets/icons/people.png")
-                  : require("../assets/icons/event.png")
-              }
-            />
-            <Text className="text-xl font-bold text-gray-800">
-              List of {current.charAt(0).toUpperCase() + current.slice(1)}
-            </Text>
-          </View>
-          <View className="flex-1 items-center justify-center bg-white">
+        <View className="flex-1 items-center bg-white">
+          <View className="flex-row w-full bg-white">
             {!isLoading ? (
               <FlatList
                 data={current === "users" ? users : events}
                 keyExtractor={(item) => item.id}
                 renderItem={({ item }) => {
                   if (current === "users") {
-                    return <UserList item={item} />;
+                    return <UserList item={item} navigation={navigation} />;
                   } else {
-                    return <EventList item={item} />;
+                    return <EventList item={item} navigation={navigation} />;
                   }
                 }}
+                refreshControl={
+                  <RefreshControl
+                    refreshing={refreshing}
+                    onRefresh={onRefresh}
+                  />
+                }
               />
             ) : (
               <ActivityIndicator size={54} color="#242565" />

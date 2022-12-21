@@ -10,6 +10,8 @@ import EventDetailScreen from "./screens/EventDetailScreen";
 import EditProfileScreen from "./screens/EditProfileScreen";
 import AddUserScreen from "./screens/AddUserScreen";
 import AddEventScreen from "./screens/AddEventScreen";
+import EditEventScreen from "./screens/EditEventScreen";
+import EditUserScreen from "./screens/EditUserScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -61,6 +63,20 @@ export default function App() {
             component={AddEventScreen}
             options={{
               title: "Add Event",
+            }}
+          />
+          <Stack.Screen
+            name="EditEvent"
+            component={EditEventScreen}
+            options={{
+              title: "Edit Event",
+            }}
+          />
+          <Stack.Screen
+            name="EditUser"
+            component={EditUserScreen}
+            options={{
+              title: "Edit User",
             }}
           />
         </Stack.Navigator>

@@ -19,6 +19,7 @@ import {
   ALERT_TYPE,
   Dialog,
 } from "react-native-alert-notification";
+import { ScrollView } from "react-native";
 // import icon
 
 const LoginScreen = ({ navigation }) => {

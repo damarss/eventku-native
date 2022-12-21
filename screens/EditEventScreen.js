@@ -28,20 +28,21 @@ import * as ImagePicker from "expo-image-picker";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
 import mime from "mime";
 
-const AddEventScreen = ({ navigation }) => {
-  const [title, setTitle] = useState("");
+const EditEventScreen = ({ navigation, route }) => {
+  const event = route.params.event;
+  const [title, setTitle] = useState(event.title);
   const [image, setImage] = useState(null);
-  const [description, setDescription] = useState("");
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
-  const [venue, setVenue] = useState("");
-  const [price, setPrice] = useState("");
-  const [organizer, setOrganizer] = useState("");
+  const [description, setDescription] = useState(event.description);
+  const [startDate, setStartDate] = useState(new Date(event.start));
+  const [endDate, setEndDate] = useState(new Date(event.end));
+  const [venue, setVenue] = useState(event.venue);
+  const [price, setPrice] = useState(event.price);
+  const [organizer, setOrganizer] = useState(event.organizer);
 
   const [show, setShow] = useState(false);
   const [show2, setShow2] = useState(false);
 
-  const handleAdd = async () => {
+  const handleEdit = async () => {
     const token = await AsyncStorage.getItem("token");
 
     if (!token) {
@@ -184,6 +185,7 @@ const AddEventScreen = ({ navigation }) => {
                 onChangeText={setTitle}
                 autoCapitalize="words"
                 className="ml-2 w-full"
+                value={title}
               />
             </View>
             <View className="border-2 px-3 py-4 rounded-2xl w-full mt-5 max-h-52 flex flex-row items-center">
@@ -194,6 +196,7 @@ const AddEventScreen = ({ navigation }) => {
                 autoCapitalize="sentences"
                 multiline={true}
                 className="ml-2 w-full"
+                value={description}
               />
             </View>
             <View className="border-2 px-3 py-4 rounded-2xl w-full mt-5">
@@ -201,7 +204,7 @@ const AddEventScreen = ({ navigation }) => {
                 <View className="flex flex-row items-center">
                   <Ionicons name="image" size={21} color="#242565" />
                   <Text className="ml-2 w-full text-gray-400">
-                    {image ? image?.name : "Select Image"}
+                    {image ? image?.name : "Select New Image (optional)"}
                   </Text>
                 </View>
               </TouchableHighlight>
@@ -273,6 +276,7 @@ const AddEventScreen = ({ navigation }) => {
                 onChangeText={setVenue}
                 autoCapitalize="words"
                 className="ml-2 w-full"
+                value={venue}
               />
             </View>
             <View className="border-2 px-3 py-4 rounded-2xl w-full mt-5 max-h-52 flex flex-row items-center">
@@ -282,6 +286,7 @@ const AddEventScreen = ({ navigation }) => {
                 onChangeText={setPrice}
                 keyboardType="numeric"
                 className="ml-2 w-full"
+                value={price}
               />
             </View>
             <View className="border-2 px-3 py-4 rounded-2xl w-full mt-5 max-h-52 flex flex-row items-center">
@@ -291,11 +296,12 @@ const AddEventScreen = ({ navigation }) => {
                 onChangeText={setOrganizer}
                 autoCapitalize="words"
                 className="ml-2 w-full"
+                value={organizer}
               />
             </View>
           </View>
           <View className="w-10/12 relative top-7">
-            <CustomButton title="Add Event" onPress={handleAdd} />
+            <CustomButton title="Edit Event" onPress={handleEdit} />
           </View>
 
           <StatusBar style="auto" />
@@ -305,4 +311,4 @@ const AddEventScreen = ({ navigation }) => {
   );
 };
 
-export default AddEventScreen;
+export default EditEventScreen;

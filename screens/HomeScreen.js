@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   View,
   TextInput,
+  RefreshControl,
 } from "react-native";
 import { axiosAuth } from "../api/axios";
 import Card from "../components/Card";
@@ -115,6 +116,39 @@ const HomeScreen = ({ navigation }) => {
               <Card item={item} navigation={navigation} />
             )}
             keyExtractor={(item) => item.id}
+            refreshControl={
+              <RefreshControl
+                refreshing={isLoading}
+                onRefresh={async () => {
+                  setIsLoading(true);
+                  const token = await AsyncStorage.getItem("token");
+                  axiosAuth(token)
+                    .get("event")
+                    .then((res) => {
+                      res.data.events.sort(
+                        (a, b) =>
+                          new Date(a.start.replace(" ", "T")) -
+                          new Date(b.start.replace(" ", "T"))
+                      );
+
+                      // remove past events
+                      const now = new Date();
+                      const filteredEvents = res.data.events.filter((event) => {
+                        const eventDate = new Date(
+                          event.start.replace(" ", "T")
+                        );
+                        return eventDate > now;
+                      });
+                      setEvents(filteredEvents);
+                      setEventsCopy(filteredEvents);
+                      setIsLoading(false);
+                    })
+                    .catch(async (err) => {
+                      console.log(err);
+                    });
+                }}
+              />
+            }
           />
         </View>
       ) : (

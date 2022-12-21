@@ -57,7 +57,7 @@ const AddUserScreen = ({ navigation }) => {
         });
         setTimeout(() => {
           navigation.navigate("Admin");
-        }, 1500);
+        }, 2000);
       })
       .catch((err) => {
         Dialog.show({

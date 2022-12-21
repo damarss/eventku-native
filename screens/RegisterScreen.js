@@ -6,6 +6,7 @@ import {
   Alert,
   Button,
   Image,
+  ScrollView,
   Text,
   TextInput,
   TouchableWithoutFeedback,
@@ -67,10 +68,6 @@ const RegisterScreen = ({ navigation }) => {
         const token = await AsyncStorage.getItem("token");
         if (token) {
           navigation.navigate("Loading");
-        } else {
-          setTimeout(() => {
-            navigation.navigate("Login");
-          }, 1000);
         }
       };
       checkToken();
@@ -78,77 +75,79 @@ const RegisterScreen = ({ navigation }) => {
   );
 
   return (
-    <View className="flex-1 items-center justify-center bg-white">
-      <View className="items-center fixed -top-16">
-        <Image
-          className="w-32 h-32 mx-auto"
-          source={require("../assets/eventku.png")}
-        />
-      </View>
-      <View className="w-10/12">
-        <View className="border-2 px-3 py-4 rounded-2xl w-full">
-          <TextInput
-            placeholder="Name"
-            onChangeText={setName}
-            autoCapitalize="none"
-            onSubmitEditing={() => {
-              emailRef.current.focus();
-            }}
-            returnKeyType="next"
+    <ScrollView className="flex-1 bg-white">
+      <View className="flex-1 items-center bg-white mt-5 my-10">
+        <View className="items-center fixed">
+          <Image
+            className="w-32 h-32 mx-auto"
+            source={require("../assets/eventku.png")}
           />
         </View>
-        <View className="border-2 px-3 py-4 rounded-2xl w-full mt-5">
-          <TextInput
-            ref={emailRef}
-            placeholder="Email"
-            onChangeText={setEmail}
-            autoCapitalize="none"
-            onSubmitEditing={() => {
-              usernameRef.current.focus();
-            }}
-            returnKeyType="next"
-          />
+        <View className="w-10/12">
+          <View className="border-2 px-3 py-4 rounded-2xl w-full">
+            <TextInput
+              placeholder="Name"
+              onChangeText={setName}
+              autoCapitalize="none"
+              onSubmitEditing={() => {
+                emailRef.current.focus();
+              }}
+              returnKeyType="next"
+            />
+          </View>
+          <View className="border-2 px-3 py-4 rounded-2xl w-full mt-5">
+            <TextInput
+              ref={emailRef}
+              placeholder="Email"
+              onChangeText={setEmail}
+              autoCapitalize="none"
+              onSubmitEditing={() => {
+                usernameRef.current.focus();
+              }}
+              returnKeyType="next"
+            />
+          </View>
+          <View className="border-2 px-3 py-4 rounded-2xl w-full mt-5">
+            <TextInput
+              ref={usernameRef}
+              placeholder="Username"
+              onChangeText={setUsername}
+              autoCapitalize="none"
+              onSubmitEditing={() => {
+                passwordRef.current.focus();
+              }}
+              returnKeyType="next"
+            />
+          </View>
+          <View className="border-2 px-3 py-4 rounded-2xl w-full mt-5">
+            <TextInput
+              ref={passwordRef}
+              placeholder="Password"
+              onChangeText={setPassword}
+              autoCapitalize="none"
+              blurOnSubmit={true}
+              secureTextEntry={true}
+              returnKeyType="done"
+            />
+          </View>
         </View>
-        <View className="border-2 px-3 py-4 rounded-2xl w-full mt-5">
-          <TextInput
-            ref={usernameRef}
-            placeholder="Username"
-            onChangeText={setUsername}
-            autoCapitalize="none"
-            onSubmitEditing={() => {
-              passwordRef.current.focus();
-            }}
-            returnKeyType="next"
-          />
+        <View className="w-10/12 relative top-7">
+          <CustomButton title="Register" onPress={handleRegister} />
+          <View className="flex flex-row justify-center mt-5">
+            <Text className="text-gray-500">Already have an account?</Text>
+            <TouchableWithoutFeedback
+              onPress={() => {
+                navigation.navigate("Login");
+              }}
+            >
+              <Text className="text-blue-500 ml-2">Login</Text>
+            </TouchableWithoutFeedback>
+          </View>
         </View>
-        <View className="border-2 px-3 py-4 rounded-2xl w-full mt-5">
-          <TextInput
-            ref={passwordRef}
-            placeholder="Password"
-            onChangeText={setPassword}
-            autoCapitalize="none"
-            blurOnSubmit={true}
-            secureTextEntry={true}
-            returnKeyType="done"
-          />
-        </View>
-      </View>
-      <View className="w-10/12 relative top-7">
-        <CustomButton title="Register" onPress={handleRegister} />
-        <View className="flex flex-row justify-center mt-5">
-          <Text className="text-gray-500">Already have an account?</Text>
-          <TouchableWithoutFeedback
-            onPress={() => {
-              navigation.navigate("Login");
-            }}
-          >
-            <Text className="text-blue-500 ml-2">Login</Text>
-          </TouchableWithoutFeedback>
-        </View>
-      </View>
 
-      <StatusBar style="auto" />
-    </View>
+        <StatusBar style="auto" />
+      </View>
+    </ScrollView>
   );
 };
 
