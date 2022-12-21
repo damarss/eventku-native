@@ -35,7 +35,7 @@ const Card = ({ item, navigation }) => {
         <Text className="font-bold text-lg mb-2">{item.title}</Text>
         <Text className="mb-2">
           {`${item.description.slice(0, 160)}${
-            item.description.length > 160 && "..."
+            item.description.length > 160 ? "..." : ""
           }`}
         </Text>
         <View className="flex flex-row items-center mb-1">

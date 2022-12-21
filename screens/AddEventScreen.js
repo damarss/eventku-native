@@ -60,11 +60,15 @@ const AddEventScreen = ({ navigation }) => {
       return;
     }
 
+    // remove second from date format
+    let start = startDate.toISOString().replace(/\:\d{2}\.\d{3}Z$/, "");
+    let end = endDate.toISOString().replace(/\:\d{2}\.\d{3}Z$/, "");
+
     const data = {
       title,
       description,
-      startDate,
-      endDate,
+      start,
+      end,
       venue,
       price,
       organizer,
@@ -79,9 +83,22 @@ const AddEventScreen = ({ navigation }) => {
           "Content-Type": "multipart/form-data",
         },
       });
-      console.log(res.data);
+
+      if (res.status === 201) {
+        Dialog.show({
+          type: ALERT_TYPE.SUCCESS,
+          title: "Success",
+          textBody: "Event added successfully",
+          button: "close",
+          autoClose: true,
+        });
+        setTimeout(() => {
+          navigation.navigate("Events", );
+        }, 1000);
+      }
     } catch (error) {
       console.log(error);
+      console.log(error.response.data.message);
     }
 
     // print http header
@@ -119,8 +136,6 @@ const AddEventScreen = ({ navigation }) => {
     if (res.canceled) {
       return;
     }
-
-    console.log(res.assets);
 
     const newUri = res.assets[0].uri;
 
@@ -189,7 +204,7 @@ const AddEventScreen = ({ navigation }) => {
                 <View className="flex flex-row items-center">
                   <Ionicons name="image" size={21} color="#242565" />
                   <Text className="ml-2 w-full text-gray-400">
-                    {image ? "Image Selected" : "Select Image"}
+                    {image ? image?.name : "Select Image"}
                   </Text>
                 </View>
               </TouchableHighlight>
@@ -219,7 +234,7 @@ const AddEventScreen = ({ navigation }) => {
                   }}
                   value={startDate}
                   display="default"
-                  mode="datetime"
+                  mode="date"
                   minimumDate={new Date()}
                 />
               )}
@@ -249,7 +264,7 @@ const AddEventScreen = ({ navigation }) => {
                   }}
                   value={endDate}
                   display="default"
-                  mode="datetime"
+                  mode="date"
                   minimumDate={new Date()}
                 />
               )}
