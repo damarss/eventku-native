@@ -128,6 +128,7 @@ const AddEventScreen = ({ navigation }) => {
 
     const res = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
     });
 
     if (res.canceled) {
