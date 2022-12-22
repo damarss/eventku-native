@@ -33,8 +33,10 @@ const EditEventScreen = ({ navigation, route }) => {
   const [title, setTitle] = useState(event.title);
   const [image, setImage] = useState(null);
   const [description, setDescription] = useState(event.description);
-  const [startDate, setStartDate] = useState(new Date(event.start));
-  const [endDate, setEndDate] = useState(new Date(event.end));
+  const [startDate, setStartDate] = useState(
+    new Date(event.start.replace(" ", "T"))
+  );
+  const [endDate, setEndDate] = useState(new Date(event.end.replace(" ", "T")));
   const [venue, setVenue] = useState(event.venue);
   const [price, setPrice] = useState(event.price);
   const [organizer, setOrganizer] = useState(event.organizer);
@@ -73,33 +75,45 @@ const EditEventScreen = ({ navigation, route }) => {
       venue,
       price,
       organizer,
-      image,
     };
+
+    if (image) {
+      data.image = image;
+    }
 
     const formData = getFormDataFromObj(data);
 
+    console.log("id" + event.id);
+
     try {
-      const res = await axiosAuth(token).post("event", formData, {
+      const res = await axiosAuth(token).post(`event/${event.id}`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
 
-      if (res.status === 201) {
+      if (res.status === 200) {
         Dialog.show({
           type: ALERT_TYPE.SUCCESS,
           title: "Success",
-          textBody: "Event added successfully",
+          textBody: "Event updated successfully",
           button: "close",
           autoClose: true,
         });
         setTimeout(() => {
-          navigation.navigate("Events");
+          navigation.navigate("Admin");
         }, 1000);
       }
     } catch (error) {
       console.log(error);
-      console.log(error.response.data.message);
+      console.log(error.response.data);
+      Dialog.show({
+        type: ALERT_TYPE.DANGER,
+        title: "Error",
+        textBody: error.response.data.messages,
+        button: "close",
+        autoClose: true,
+      });
     }
   };
 
