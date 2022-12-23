@@ -73,26 +73,20 @@ const HomeScreen = ({ navigation }) => {
               ref={searchRef}
               autoCapitalize="none"
               returnKeyType="search"
-              onSubmitEditing={(e) => {
-                if (e.nativeEvent.text === "") {
+              onChangeText={(text) => {
+                if (text === "") {
                   setEvents(eventsCopy);
                   return;
                 }
 
                 const filteredEvents = events.filter((event) => {
                   return (
-                    event.title
-                      .toLowerCase()
-                      .includes(e.nativeEvent.text.toLowerCase()) ||
-                    event.venue
-                      .toLowerCase()
-                      .includes(e.nativeEvent.text.toLowerCase()) ||
+                    event.title.toLowerCase().includes(text.toLowerCase()) ||
+                    event.venue.toLowerCase().includes(text.toLowerCase()) ||
                     event.description
                       .toLowerCase()
-                      .includes(e.nativeEvent.text.toLowerCase()) ||
-                    event.organizer
-                      .toLowerCase()
-                      .includes(e.nativeEvent.text.toLowerCase())
+                      .includes(text.toLowerCase()) ||
+                    event.organizer.toLowerCase().includes(text.toLowerCase())
                   );
                 });
                 setEvents(filteredEvents);
@@ -103,7 +97,7 @@ const HomeScreen = ({ navigation }) => {
         ),
       });
       checkToken();
-    }, [navigation])
+    }, [])
   );
 
   return (
